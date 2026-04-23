@@ -1,8 +1,8 @@
 # Core Framework
-langchain==0.1.9
-langchain-community==0.0.24
+langchain==0.3.0.dev1
+langchain-community==0.3.27
 crewai==0.28.0
-python-dotenv==1.0.0
+python-dotenv==1.2.2
 
 # FastAPI
 fastapi==0.104.1
@@ -11,7 +11,7 @@ pydantic==2.5.0
 pydantic-settings==2.1.0
 
 # Async & Concurrency
-aiohttp==3.9.1
+aiohttp==3.13.4
 asyncio-contextmanager==1.0.0
 
 # Data & Storage
@@ -23,7 +23,7 @@ redis==5.0.1
 # API Clients
 salesforce-bulk==2.1.1
 simple-salesforce==1.12.5
-requests==2.31.0
+requests==2.33.0
 
 # Monitoring & Logging
 python-json-logger==2.0.7
@@ -38,13 +38,13 @@ tenacity==8.2.3
 structlog==23.2.0
 
 # Testing
-pytest==7.4.3
+pytest==9.0.3
 pytest-asyncio==0.21.1
 pytest-cov==4.1.0
 httpx==0.25.2
 
 # Development
-black==23.12.0
+black==26.3.1
 flake8==6.1.0
 mypy==1.7.1
 isort==5.13.2
