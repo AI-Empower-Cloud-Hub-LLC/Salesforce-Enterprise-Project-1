@@ -1,0 +1,50 @@
+# Core Framework
+langchain==0.1.9
+langchain-community==0.0.24
+crewai==0.28.0
+python-dotenv==1.0.0
+
+# FastAPI
+fastapi==0.104.1
+uvicorn==0.24.0
+pydantic==2.5.0
+pydantic-settings==2.1.0
+
+# Async & Concurrency
+aiohttp==3.9.1
+asyncio-contextmanager==1.0.0
+
+# Data & Storage
+sqlalchemy==2.0.23
+psycopg2-binary==2.9.9
+boto3==1.29.7
+redis==5.0.1
+
+# API Clients
+salesforce-bulk==2.1.1
+simple-salesforce==1.12.5
+requests==2.31.0
+
+# Monitoring & Logging
+python-json-logger==2.0.7
+opentelemetry-api==1.21.0
+opentelemetry-sdk==1.21.0
+opentelemetry-exporter-aws-xray==2.10.2
+watchtower==3.0.1
+
+# Utilities
+python-dateutil==2.8.2
+tenacity==8.2.3
+structlog==23.2.0
+
+# Testing
+pytest==7.4.3
+pytest-asyncio==0.21.1
+pytest-cov==4.1.0
+httpx==0.25.2
+
+# Development
+black==23.12.0
+flake8==6.1.0
+mypy==1.7.1
+isort==5.13.2
