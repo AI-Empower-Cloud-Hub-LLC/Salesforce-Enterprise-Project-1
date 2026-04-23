@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-config
+  namespace: salesforce-platform
+data:
+  LOG_LEVEL: "INFO"
+  PYTHONUNBUFFERED: "1"
+  INTEGRATION_REGISTRY_CONFIG: "/app/config/integrations.yaml"
+  API_HOST: "0.0.0.0"
+  API_PORT: "8000"
+  API_WORKERS: "4"
+  UVICORN_LOOP: "uvloop"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: integrations-config
+  namespace: salesforce-platform
+data:
+  integrations.yaml: |
+    integrations:
+      salesforce:
+        type: salesforce
+        enabled: true
+        config:
+          auth_type: oauth2
+          rate_limit: 1000
+      database:
+        type: database
+        enabled: true
+        config:
+          pool_size: 20
+          pool_recycle: 3600
+      external_service:
+        type: external_service
+        enabled: true
+        config:
+          timeout: 30
+          retries: 3
+      file_storage:
+        type: file_storage
+        enabled: true
+        config:
+          storage_type: local
+          path: /app/storage

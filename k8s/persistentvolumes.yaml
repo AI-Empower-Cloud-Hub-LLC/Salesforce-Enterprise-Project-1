@@ -1,0 +1,94 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+  namespace: salesforce-platform
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+  storageClassName: standard
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: redis-pvc
+  namespace: salesforce-platform
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: standard
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: init-db-scripts
+  namespace: salesforce-platform
+data:
+  01-init.sql: |
+    -- Create schemas
+    CREATE SCHEMA IF NOT EXISTS operations;
+    CREATE SCHEMA IF NOT EXISTS workflows;
+    CREATE SCHEMA IF NOT EXISTS credentials;
+
+    -- Operations history table
+    CREATE TABLE operations.history (
+      id SERIAL PRIMARY KEY,
+      operation_id VARCHAR(255) UNIQUE NOT NULL,
+      status VARCHAR(50) NOT NULL,
+      duration_ms INTEGER,
+      started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      completed_at TIMESTAMP,
+      data JSONB,
+      errors JSONB
+    );
+
+    CREATE INDEX idx_operations_status ON operations.history(status);
+    CREATE INDEX idx_operations_started_at ON operations.history(started_at DESC);
+
+    -- Workflows table
+    CREATE TABLE workflows.definitions (
+      id SERIAL PRIMARY KEY,
+      workflow_id VARCHAR(255) UNIQUE NOT NULL,
+      name VARCHAR(255) NOT NULL,
+      trigger JSONB NOT NULL,
+      steps JSONB NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE INDEX idx_workflows_created_at ON workflows.definitions(created_at DESC);
+
+    -- Workflow executions table
+    CREATE TABLE workflows.executions (
+      id SERIAL PRIMARY KEY,
+      execution_id VARCHAR(255) UNIQUE NOT NULL,
+      workflow_id VARCHAR(255) NOT NULL REFERENCES workflows.definitions(workflow_id),
+      status VARCHAR(50) NOT NULL,
+      current_step VARCHAR(255),
+      started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      completed_at TIMESTAMP,
+      steps_completed JSONB,
+      FOREIGN KEY (workflow_id) REFERENCES workflows.definitions(workflow_id)
+    );
+
+    CREATE INDEX idx_executions_workflow_id ON workflows.executions(workflow_id);
+    CREATE INDEX idx_executions_status ON workflows.executions(status);
+
+    -- Credentials table (encrypted in production, base64 for demo)
+    CREATE TABLE credentials.secrets (
+      id SERIAL PRIMARY KEY,
+      service VARCHAR(255) NOT NULL,
+      key VARCHAR(255) NOT NULL,
+      value TEXT NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE(service, key)
+    );
+
+    CREATE INDEX idx_secrets_service ON credentials.secrets(service);

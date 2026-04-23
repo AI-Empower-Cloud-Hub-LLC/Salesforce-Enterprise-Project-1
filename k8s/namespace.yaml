@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: salesforce-platform
+  labels:
+    name: salesforce-platform
+    environment: production
